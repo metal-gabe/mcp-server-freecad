@@ -1,14 +1,38 @@
 from dataclasses import dataclass
-from fastmcp import FastMCP
-from loguru import logger
 from typing import Any, Dict, Literal
 
-import Draft
-import FreeCAD
-import FreeCADGui
-import Part
-import PartDesign
-import Sketcher
+from fastmcp import FastMCP
+from loguru import logger
+
+try:
+   import Draft
+   import FreeCAD
+   import FreeCADGui
+   import Part
+   import PartDesign
+   import Sketcher
+   FREECAD_AVAILABLE = True
+except ImportError as e:
+   logger.warning(f"FreeCAD modules not available: {e}")
+   logger.warning("This MCP server requires FreeCAD to be installed and available in the Python path")
+   FREECAD_AVAILABLE = False
+
+   # Create mock objects to prevent immediate crashes
+   class MockFreeCAD:
+      @staticmethod
+      def newDocument(name): return None
+
+      class Placement:
+         def __init__(self, base, rotation): pass
+
+      class Rotation:
+         def __init__(self, vector, angle): pass
+
+      class Vector:
+         def __init__(self, x, y, z): pass
+
+   FreeCAD = MockFreeCAD()
+   Draft = Part = PartDesign = Sketcher = FreeCADGui = None
 
 
 @dataclass
@@ -18,11 +42,16 @@ class FreeCADOperation:
    parameters: Dict[str, Any]
 
 
-class FreeCADMCPServer:
+class MCPServerFreeCAD:
    def __init__(self):
       self.active_body = None
       self.doc = None
       self.server = FastMCP("freecad-mcp")
+
+      if not FREECAD_AVAILABLE:
+         logger.error("FreeCAD is not available. Server will start but operations will fail.")
+         logger.error("Please install FreeCAD and ensure it's in your Python path.")
+
       self.setup_tools()
 
    ## ==========================================================================
@@ -274,6 +303,9 @@ class FreeCADMCPServer:
       return f"Created cylinder '{name}' with radius {radius}mm and height {height}mm"
 
    async def _create_document(self, args: Dict[str, Any]) -> str:
+      if not FREECAD_AVAILABLE:
+         return "Error: FreeCAD is not available. Please install FreeCAD and restart the server."
+
       logger.info("CreateDocument: Starting new document creation...")
       doc_name = args.get("name", "Document")
       self.doc = FreeCAD.newDocument(doc_name)

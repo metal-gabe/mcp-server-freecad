@@ -1,9 +1,5 @@
-from freecad_mcp_server import FreeCADMCPServer
+from src.mcp_server_freecad import MCPServerFreeCAD
 
 
 def main():
-   FreeCADMCPServer().server.run()
-
-
-if __name__ == "__main__":
-   main()
+   MCPServerFreeCAD().server.run()
