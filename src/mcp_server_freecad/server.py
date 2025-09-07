@@ -10,6 +10,7 @@ try:
    import os
    freecad_paths = [
       "/Applications/FreeCAD.app/Contents/Resources/lib",
+      "/Applications/FreeCAD.app/Contents/Resources/lib/python3.11/site-packages",
       "/usr/lib/freecad/lib",  # Linux
       "C:\\Program Files\\FreeCAD\\bin",  # Windows
    ]
