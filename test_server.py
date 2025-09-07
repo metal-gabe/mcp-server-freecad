@@ -14,7 +14,7 @@ def test_import():
    print("Testing module imports...")
 
    try:
-      from src.mcp_server_freecad import MCPServerFreeCAD
+      from src.mcp_server_freecad.server import MCPServerFreeCAD
       print("✅ Successfully imported MCPServerFreeCAD")
       return True
    except Exception as e:
@@ -26,7 +26,7 @@ def test_server_creation():
    print("Testing server creation...")
 
    try:
-      from src.mcp_server_freecad import MCPServerFreeCAD
+      from src.mcp_server_freecad.server import MCPServerFreeCAD
       server = MCPServerFreeCAD()
       print("✅ Successfully created MCPServerFreeCAD instance")
       return True

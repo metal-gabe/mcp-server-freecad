@@ -5,6 +5,19 @@ from fastmcp import FastMCP
 from loguru import logger
 
 try:
+   # Try adding FreeCAD.app path for macOS installations
+   import sys
+   import os
+   freecad_paths = [
+       "/Applications/FreeCAD.app/Contents/Resources/lib",
+       "/usr/lib/freecad/lib",  # Linux
+       "C:\\Program Files\\FreeCAD\\bin",  # Windows
+   ]
+
+   for path in freecad_paths:
+       if os.path.exists(path) and path not in sys.path:
+           sys.path.insert(0, path)
+
    import Draft
    import FreeCAD
    import FreeCADGui
@@ -12,9 +25,18 @@ try:
    import PartDesign
    import Sketcher
    FREECAD_AVAILABLE = True
+   logger.info(f"FreeCAD loaded successfully. Version: {FreeCAD.Version()}")
 except ImportError as e:
    logger.warning(f"FreeCAD modules not available: {e}")
    logger.warning("This MCP server requires FreeCAD to be installed and available in the Python path")
+   logger.warning("Common solutions:")
+   logger.warning("  - Install FreeCAD with matching Python version")
+   logger.warning("  - Use FreeCAD's built-in Python interpreter")
+   logger.warning("  - Set PYTHONPATH to include FreeCAD modules")
+   FREECAD_AVAILABLE = False
+except Exception as e:
+   logger.error(f"Error loading FreeCAD modules: {e}")
+   logger.error("This often happens when FreeCAD Python version doesn't match current Python")
    FREECAD_AVAILABLE = False
 
    # Create mock objects to prevent immediate crashes
