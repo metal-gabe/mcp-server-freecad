@@ -19,8 +19,11 @@ Add this to your Claude Desktop configuration file:
   "mcpServers": {
     "freecad": {
       "command": "uv",
-      "args": ["run", "freecad-mcp-server"],
-      "cwd": "/absolute/path/to/your/mcp-server-freecad"
+      "args": [
+        "--directory=/absolute/path/to/your/mcp-server-freecad",
+        "run",
+        "mcp-server-freecad"
+      ]
     }
   }
 }
@@ -59,16 +62,19 @@ Add this to your Claude Desktop configuration file:
 ## Claude Desktop Configuration File Locations
 
 ### macOS
+
 ```
 ~/Library/Application Support/Claude/claude_desktop_config.json
 ```
 
 ### Windows
+
 ```
 %APPDATA%\Claude\claude_desktop_config.json
 ```
 
 ### Linux
+
 ```
 ~/.config/claude/claude_desktop_config.json
 ```
@@ -78,6 +84,7 @@ Add this to your Claude Desktop configuration file:
 ### "spawn uv run ENOENT" Error
 
 This error occurs when:
+
 1. **uv not found**: Install uv using `curl -LsSf https://astral.sh/uv/install.sh | sh`
 2. **Wrong working directory**: Ensure `cwd` points to this project directory
 3. **Missing entry point**: This should be fixed by the `[project.scripts]` section in `pyproject.toml`

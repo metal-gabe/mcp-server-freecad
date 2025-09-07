@@ -9,14 +9,14 @@ try:
    import sys
    import os
    freecad_paths = [
-       "/Applications/FreeCAD.app/Contents/Resources/lib",
-       "/usr/lib/freecad/lib",  # Linux
-       "C:\\Program Files\\FreeCAD\\bin",  # Windows
+      "/Applications/FreeCAD.app/Contents/Resources/lib",
+      "/usr/lib/freecad/lib",  # Linux
+      "C:\\Program Files\\FreeCAD\\bin",  # Windows
    ]
 
    for path in freecad_paths:
-       if os.path.exists(path) and path not in sys.path:
-           sys.path.insert(0, path)
+      if os.path.exists(path) and path not in sys.path:
+         sys.path.insert(0, path)
 
    import Draft
    import FreeCAD
@@ -24,7 +24,7 @@ try:
    import Part
    import PartDesign
    import Sketcher
-   FREECAD_AVAILABLE = True
+   freecad_available = True
    logger.info(f"FreeCAD loaded successfully. Version: {FreeCAD.Version()}")
 except ImportError as e:
    logger.warning(f"FreeCAD modules not available: {e}")
@@ -33,11 +33,11 @@ except ImportError as e:
    logger.warning("  - Install FreeCAD with matching Python version")
    logger.warning("  - Use FreeCAD's built-in Python interpreter")
    logger.warning("  - Set PYTHONPATH to include FreeCAD modules")
-   FREECAD_AVAILABLE = False
+   freecad_available = False
 except Exception as e:
    logger.error(f"Error loading FreeCAD modules: {e}")
    logger.error("This often happens when FreeCAD Python version doesn't match current Python")
-   FREECAD_AVAILABLE = False
+   freecad_available = False
 
    # Create mock objects to prevent immediate crashes
    class MockFreeCAD:
@@ -70,7 +70,7 @@ class MCPServerFreeCAD:
       self.doc = None
       self.server = FastMCP("freecad-mcp")
 
-      if not FREECAD_AVAILABLE:
+      if not freecad_available:
          logger.error("FreeCAD is not available. Server will start but operations will fail.")
          logger.error("Please install FreeCAD and ensure it's in your Python path.")
 
@@ -325,7 +325,7 @@ class MCPServerFreeCAD:
       return f"Created cylinder '{name}' with radius {radius}mm and height {height}mm"
 
    async def _create_document(self, args: Dict[str, Any]) -> str:
-      if not FREECAD_AVAILABLE:
+      if not freecad_available:
          return "Error: FreeCAD is not available. Please install FreeCAD and restart the server."
 
       logger.info("CreateDocument: Starting new document creation...")
