@@ -1,0 +1,13 @@
+[project]
+description = "An MCP server for Claude Desktop that allows you to control FreeCAD using natural language prompts."
+name = "mcp-server-freecad"
+readme = "README.md"
+requires-python = ">=3.13"
+version = "0.1.0"
+dependencies = ["fastmcp>=2.11.3", "loguru>=0.7.3", "ruff>=0.12.12"]
+
+[project.scripts]
+mcp-server-freecad = "main:main"
+
+[tool.uv]
+package = true
