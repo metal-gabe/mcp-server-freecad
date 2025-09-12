@@ -4,69 +4,6 @@ from typing import Any, Dict, Literal
 from fastmcp import FastMCP
 from loguru import logger
 
-try:
-    # Try adding FreeCAD.app path for macOS installations
-    import sys
-    import os
-
-    freecad_paths = [
-        "/Applications/FreeCAD.app/Contents/Resources/lib",
-        "/Applications/FreeCAD.app/Contents/Resources/lib/python3.11/site-packages",
-        "/usr/lib/freecad/lib",  # Linux
-        "C:\\Program Files\\FreeCAD\\bin",  # Windows
-    ]
-
-    for path in freecad_paths:
-        if os.path.exists(path) and path not in sys.path:
-            sys.path.insert(0, path)
-
-    import Draft
-    import FreeCAD
-    import FreeCADGui
-    import Part
-    import PartDesign
-    import Sketcher
-
-    freecad_available = True
-    logger.info(f"FreeCAD loaded successfully. Version: {FreeCAD.Version()}")
-except ImportError as e:
-    logger.warning(f"FreeCAD modules not available: {e}")
-    logger.warning(
-        "This MCP server requires FreeCAD to be installed and available in the Python path"
-    )
-    logger.warning("Common solutions:")
-    logger.warning("  - Install FreeCAD with matching Python version")
-    logger.warning("  - Use FreeCAD's built-in Python interpreter")
-    logger.warning("  - Set PYTHONPATH to include FreeCAD modules")
-    freecad_available = False
-except Exception as e:
-    logger.error(f"Error loading FreeCAD modules: {e}")
-    logger.error(
-        "This often happens when FreeCAD Python version doesn't match current Python"
-    )
-    freecad_available = False
-
-    # Create mock objects to prevent immediate crashes
-    class MockFreeCAD:
-        @staticmethod
-        def newDocument(name):
-            return None
-
-        class Placement:
-            def __init__(self, base, rotation):
-                pass
-
-        class Rotation:
-            def __init__(self, vector, angle):
-                pass
-
-        class Vector:
-            def __init__(self, x, y, z):
-                pass
-
-    FreeCAD = MockFreeCAD()
-    Draft = Part = PartDesign = Sketcher = FreeCADGui = None
-
 
 @dataclass
 class FreeCADOperation:
@@ -80,13 +17,6 @@ class MCPServerFreeCAD:
         self.active_body = None
         self.doc = None
         self.server = FastMCP("freecad-mcp")
-
-        if not freecad_available:
-            logger.error(
-                "FreeCAD is not available. Server will start but operations will fail."
-            )
-            logger.error("Please install FreeCAD and ensure it's in your Python path.")
-
         self.setup_tools()
 
     ## ==========================================================================
@@ -400,9 +330,6 @@ class MCPServerFreeCAD:
         return f"Created cylinder '{name}' with radius {radius}mm and height {height}mm"
 
     async def _create_document(self, args: Dict[str, Any]) -> str:
-        if not freecad_available:
-            return "Error: FreeCAD is not available. Please install FreeCAD and restart the server."
-
         logger.info("CreateDocument: Starting new document creation...")
         doc_name = args.get("name", "Document")
         self.doc = FreeCAD.newDocument(doc_name)
