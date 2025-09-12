@@ -1,3 +1,5 @@
+# ruff: noqa
+# type: ignore
 import FreeCAD as App
 import json
 

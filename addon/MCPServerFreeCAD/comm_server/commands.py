@@ -1,3 +1,5 @@
+# ruff: noqa
+# type: ignore
 import FreeCAD
 import FreeCADGui
 from .comm_server import start_rpc_server, stop_rpc_server

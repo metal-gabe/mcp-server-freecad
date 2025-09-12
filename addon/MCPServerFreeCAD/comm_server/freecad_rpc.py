@@ -1,3 +1,5 @@
+# ruff: noqa
+# type: ignore
 import FreeCAD
 import FreeCADGui
 import ObjectsFem

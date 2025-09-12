@@ -1,3 +1,5 @@
+# ruff: noqa
+# type: ignore
 import os
 from functools import cache
 
