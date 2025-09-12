@@ -4,14 +4,10 @@ name = "mcp-server-freecad"
 readme = "README.md"
 requires-python = ">=3.13"
 version = "0.1.0"
-dependencies = ["fastmcp>=2.11.3", "loguru>=0.7.3"]
+dependencies = ["fastmcp>=2.11.3", "loguru>=0.7.3", "ruff>=0.12.12"]
 
 [project.scripts]
-mcp-server-freecad = "mcp_server_freecad.main:main"
+mcp-server-freecad = "main:main"
 
 [tool.uv]
 package = true
-
-[build-system]
-requires = ["hatchling"]
-build-backend = "hatchling.build"
