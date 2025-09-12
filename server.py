@@ -1,8 +1,11 @@
+# type: ignore
 from dataclasses import dataclass
-from typing import Any, Dict, Literal
+from typing import Any, Dict, Literal, Optional
 
 from fastmcp import FastMCP
 from loguru import logger
+
+import FreeCAD
 
 
 @dataclass
@@ -15,7 +18,7 @@ class FreeCADOperation:
 class MCPServerFreeCAD:
     def __init__(self):
         self.active_body = None
-        self.doc = None
+        self.doc: Optional[FreeCAD.Document] = None
         self.server = FastMCP("freecad-mcp")
         self.setup_tools()
 
@@ -45,7 +48,7 @@ class MCPServerFreeCAD:
             return await self._boolean_operation(args)
 
         @self.server.tool(
-            name="create_box", description="Create a rectangular box/cube"
+            name="create_box", description="Create a rectangular box or cube"
         )
         async def create_box(
             length: float,
@@ -356,7 +359,6 @@ class MCPServerFreeCAD:
             position["x"], position["y"], position["z"]
         )
         sphere.Radius = radius
-
         self.doc.recompute()
         return f"Created sphere '{name}' with radius {radius}mm"
 
@@ -391,7 +393,6 @@ class MCPServerFreeCAD:
 
         for name in object_names:
             obj = self.doc.getObject(name)
-
             if obj:
                 logger.debug(f"ExportSTL: Adding object to list: {name}")
                 objects.append(obj)
@@ -415,7 +416,6 @@ class MCPServerFreeCAD:
 
                 for mesh in meshes[1:]:
                     combined.addMesh(mesh)
-
                 combined.write(filepath)
 
             logger.debug(f"ExportSTL: Exported {len(objects)} objects to: {filepath}")
@@ -438,7 +438,7 @@ class MCPServerFreeCAD:
             objects.append(f"- {obj.Label} ({obj_type})")
 
         logger.debug(f"ListObjects: Found {len(objects)} objects in document")
-        return f"Objects in document:\n" + "\n".join(objects)
+        return "Objects in document:\n" + "\n".join(objects)
 
     async def _move_object(self, args: Dict[str, Any]) -> str:
         if not self.doc:
@@ -459,7 +459,9 @@ class MCPServerFreeCAD:
 
         current = obj.Placement.Base
         obj.Placement.Base = FreeCAD.Vector(
-            current.x + ox, current.y + oy, current.z + oz
+            current.x + ox,
+            current.y + oy,
+            current.z + oz,
         )
 
         self.doc.recompute()
@@ -474,7 +476,6 @@ class MCPServerFreeCAD:
         axis = args["axis"]
         object_name = args["object_name"]
         obj = self.doc.getObject(object_name)
-
         if not obj:
             logger.warning(f"RotateObject: Object not found: {object_name}")
             return f"Object not found: {object_name}"
@@ -486,7 +487,6 @@ class MCPServerFreeCAD:
         base = obj.Placement.Base
         rotation = FreeCAD.Rotation(FreeCAD.Vector(ox, oy, oz), angle)
         obj.Placement = FreeCAD.Placement(base, rotation)
-
         self.doc.recompute()
         return (
             f"Rotated '{object_name}' around axis ({ox}, {oy}, {oz}) by {angle} degrees"

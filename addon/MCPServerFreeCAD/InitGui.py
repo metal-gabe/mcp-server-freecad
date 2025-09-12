@@ -1,3 +1,5 @@
+# ruff: noqa
+# type: ignore
 class FreeCADMCPAddonWorkbench(Workbench):
     MenuText = "MCP Addon"
     ToolTip = "Addon for MCP Communication"
