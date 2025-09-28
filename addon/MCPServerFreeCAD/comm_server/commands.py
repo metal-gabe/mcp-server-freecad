@@ -1,28 +1,27 @@
 # ruff: noqa
 # type: ignore
 import FreeCAD
-import FreeCADGui
-from .comm_server import start_rpc_server, stop_rpc_server
+from .comm_server import start_comm_server, stop_comm_server
 
 
-class StartRPCServerCommand:
+class StartCommServerCommand:
     def GetResources(self):
-        return {"MenuText": "Start RPC Server", "ToolTip": "Start RPC Server"}
+        return {"MenuText": "Start Comm Server", "ToolTip": "Start Comm Server"}
 
     def Activated(self):
-        msg = start_rpc_server()
+        msg = start_comm_server()
         FreeCAD.Console.PrintMessage(msg + "\n")
 
     def IsActive(self):
         return True
 
 
-class StopRPCServerCommand:
+class StopCommServerCommand:
     def GetResources(self):
-        return {"MenuText": "Stop RPC Server", "ToolTip": "Stop RPC Server"}
+        return {"MenuText": "Stop Comm Server", "ToolTip": "Stop Comm Server"}
 
     def Activated(self):
-        msg = stop_rpc_server()
+        msg = stop_comm_server()
         FreeCAD.Console.PrintMessage(msg + "\n")
 
     def IsActive(self):

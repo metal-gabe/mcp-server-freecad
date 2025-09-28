@@ -1,7 +1,6 @@
 # ruff: noqa
 # type: ignore
 import FreeCAD
-import FreeCADGui
 import queue
 from typing import Any
 from PySide import QtCore

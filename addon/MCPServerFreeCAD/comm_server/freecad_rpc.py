@@ -8,10 +8,7 @@ import base64
 import io
 import os
 import tempfile
-import threading
 from typing import Any
-from xmlrpc.server import SimpleXMLRPCServer
-from PySide import QtCore
 
 from .parts_library import get_parts_list, insert_part_from_library
 from .serialize import serialize_object

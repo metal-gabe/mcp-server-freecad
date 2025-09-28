@@ -1,7 +1,6 @@
 # ruff: noqa
 # type: ignore
 import FreeCAD as App
-import json
 
 
 def serialize_value(value):
@@ -30,6 +29,7 @@ def serialize_value(value):
 def serialize_shape(shape):
     if shape is None:
         return None
+
     return {
         "Volume": shape.Volume,
         "Area": shape.Area,
@@ -42,6 +42,7 @@ def serialize_shape(shape):
 def serialize_view_object(view):
     if view is None:
         return None
+
     return {
         "ShapeColor": serialize_value(view.ShapeColor),
         "Transparency": view.Transparency,
