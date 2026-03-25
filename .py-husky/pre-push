@@ -3,7 +3,7 @@
 EXIT_CODE=0
 
 # a.k.a. `type:check`
-mypy. || EXIT_CODE=$?
+mypy . || EXIT_CODE=$?
 
 pytest || EXIT_CODE=$?
 
