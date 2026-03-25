@@ -1,1 +1,1 @@
-from . import comm_server
+from . import comm_server as comm_server
