@@ -6,8 +6,9 @@ EXIT_CODE=0
 ggshield secret scan path . --recursive --yes || EXIT_CODE=$?
 
 # a.k.a. `lint:commit`
-uv run ruff check . || EXIT_CODE=$?
+ruff check . || EXIT_CODE=$?
 
+# a.k.a. `circ:check`
 # madge --circular . || EXIT_CODE=$?
 # ^ keeping for ref, but there isn't a good Python option for this; this was the closest, but it's been abandoned
 

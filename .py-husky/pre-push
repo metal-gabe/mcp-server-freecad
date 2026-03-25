@@ -3,9 +3,10 @@
 EXIT_CODE=0
 
 # a.k.a. `type:check`
-uv run mypy. || EXIT_CODE=$?
+mypy. || EXIT_CODE=$?
 
-uv run pytest || EXIT_CODE=$?
+# a.k.a. `test`
+pytest || EXIT_CODE=$?
 
 echo "The \`pre-push\` script has completed. Exiting with a code of ${EXIT_CODE}"
 exit $EXIT_CODE
