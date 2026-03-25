@@ -5,7 +5,13 @@ EXIT_CODE=0
 # a.k.a. `type:check`
 mypy . || EXIT_CODE=$?
 
-pytest || EXIT_CODE=$?
+# a.k.a. `test`
+pytest; PYTEST_EXIT=$?
+
+# exit code 5 = no tests collected, which is not a failure
+if [ "$PYTEST_EXIT" -ne 0 ] && [ "$PYTEST_EXIT" -ne 5 ]; then
+   EXIT_CODE=$PYTEST_EXIT
+fi
 
 echo "The \`pre-push\` script has completed. Exiting with a code of ${EXIT_CODE}"
 exit $EXIT_CODE
