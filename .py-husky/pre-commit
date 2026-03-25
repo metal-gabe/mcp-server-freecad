@@ -1,0 +1,16 @@
+#!/bin/sh
+
+EXIT_CODE=0
+
+# a.k.a. `secrets:check`
+ggshield secret scan path . --recursive --yes || EXIT_CODE=$?
+
+# a.k.a. `lint:commit`
+ruff check . || EXIT_CODE=$?
+
+# a.k.a. `circ:check`
+# madge --circular . || EXIT_CODE=$?
+# ^ keeping for ref, but there isn't a good Python option for this; this was the closest, but it's been abandoned
+
+echo "The \`pre-commit\` script has completed. Exiting with a code of ${EXIT_CODE}"
+exit $EXIT_CODE
